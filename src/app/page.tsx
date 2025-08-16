@@ -1,103 +1,316 @@
-import Image from "next/image";
+"use client"
 
-export default function Home() {
+import { Textarea } from "@/components/ui/textarea"
+import { Label } from "@/components/ui/label"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import Link from "next/link"
+import Image from "next/image"
+import {
+  NavigationMenu,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+} from "@/components/ui/navigation-menu"
+import { type ChangeEvent, useState } from "react"
+import { CodeBlock, CodeBlockCopyButton } from "@/components/ai-elements/code-block"
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { Footer } from "@/components/custom/footer"
+import { saveCode } from "@/lib/save"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { getCode } from "@/lib/get-code"
+
+const Home = () => {
+  const [codeContent, setCodeContent] = useState("")
+  const [mdContent, setmdContent] = useState("")
+  const [language, setLanguage] = useState("python")
+  const [shareCode, setShareCode ] = useState("")
+  const [shareCodeGetter, setShareCodeGetter] = useState("")
+
+  const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    setCodeContent(e.target.value)
+  }
+
+  const handleCodeGetter = (e: ChangeEvent<HTMLInputElement>) => {
+    setShareCodeGetter(e.target.value)
+  }
+
+  const handleMdChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    setmdContent(e.target.value)
+  }
+
+  const handleLanguage = (value: string) => {
+    setLanguage(value)
+  }
+
+  const handleShareCode = async (code: string, instructions: string) => {
+    const sharingCode = await saveCode(code, instructions)
+    setShareCode(sharingCode)
+  }
+
+  const getSharedCode = async (codeGetter: string) => {
+    const data = await getCode(codeGetter)
+    setCodeContent(data.code)
+    setmdContent(data.instructions)
+  }
+
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
+      <nav className="border-b bg-white/90 dark:bg-slate-900/90 backdrop-blur-md supports-[backdrop-filter]:bg-white/80 dark:supports-[backdrop-filter]:bg-slate-900/80 sticky top-0 z-50 shadow-sm">
+        <div className="max-w-6xl mx-auto px-6 py-4">
+          <div className="flex items-center justify-between">
+            {/* Logo/Brand */}
+            <div className="flex items-center space-x-3">
+              <a href="#" className="hover:scale-105 transition-transform duration-200">
+                <Image src="/logo.svg" alt="share-a-code Logo" width={70} height={70} className="rounded-lg" />
+              </a>
+              <a href="#" className="group">
+                <h1 className="text-xl font-bold">Share-A-Code</h1>
+              </a>
+            </div>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+            {/* Navigation Links */}
+            <NavigationMenu>
+              <NavigationMenuList className="flex space-x-2">
+                <NavigationMenuItem>
+                  <NavigationMenuLink asChild>
+                    <Link
+                      href="https://shareacode.cc"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-all duration-200 hover:scale-105"
+                    >
+                      Website
+                    </Link>
+                  </NavigationMenuLink>
+                </NavigationMenuItem>
+                <NavigationMenuItem>
+                  <NavigationMenuLink asChild>
+                    <Link
+                      href="https://link.clelia.dev"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-all duration-200 hover:scale-105"
+                    >
+                      Social Platforms
+                    </Link>
+                  </NavigationMenuLink>
+                </NavigationMenuItem>
+                <NavigationMenuItem>
+                  <NavigationMenuLink asChild>
+                    <Link
+                      href="https://github.com/AstraBert/share-a-code"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-all duration-200 hover:scale-105"
+                    >
+                      GitHub
+                    </Link>
+                  </NavigationMenuLink>
+                </NavigationMenuItem>
+              </NavigationMenuList>
+            </NavigationMenu>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </nav>
+
+      <div className="grid w-full max-w-sm items-center gap-3 mx-auto">
+          <Label>Put a share code in the box below!</Label>
+          <Input placeholder="your-code-here" onChange={handleCodeGetter} value={shareCodeGetter}/>
+          <Button onClick={() => getSharedCode(shareCodeGetter)}>
+          View Some Shared Code
+          </Button>
+        </div>
+
+      <div className="max-w-7xl mx-auto px-6 py-12 space-y-12">
+        <Tabs defaultValue="editor" className="h-full flex flex-col">
+          <TabsList className="grid w-full grid-cols-2 flex-shrink-0 mb-8">
+            <TabsTrigger value="editor">Editor</TabsTrigger>
+            <TabsTrigger value="instructions">Instructions</TabsTrigger>
+          </TabsList>
+          <TabsContent value="editor" className="flex-1 mt-0 min-h-0">
+            {/* Title and Subtitle */}
+            <div className="text-center space-y-4 mb-12">
+              <h2 className="text-4xl font-bold bg-gradient-to-r from-slate-900 via-slate-700 to-slate-900 dark:from-white dark:via-slate-200 dark:to-white bg-clip-text text-transparent">
+                Code Editor
+              </h2>
+              <p className="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+                Write, format, and share your code with beautiful syntax highlighting and instant preview
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+
+              {/* Code Editor */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-slate-700 dark:text-slate-300">Editor</h3>
+                <div className="relative group">
+                  <div className="relative">
+                    <Textarea
+                      onChange={handleChange}
+                      placeholder="Enter your code here and watch it come to life in the preview..."
+                      className="min-h-[400px] bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 rounded-xl font-mono text-sm placeholder:text-slate-400 dark:placeholder:text-slate-500 shadow-lg transition-all duration-200"
+                      value={codeContent}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Code Preview */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-slate-700 dark:text-slate-300">Preview</h3>
+                <div className="relative group">
+                  <div className="relative bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 shadow-lg overflow-hidden">
+                    <CodeBlock code={codeContent} language={language}>
+                      <CodeBlockCopyButton
+                        onCopy={() => console.log("Copied code to clipboard")}
+                        onError={() => console.error("Failed to copy code to clipboard")}
+                      />
+                    </CodeBlock>
+                  </div>
+                </div>
+              </div>
+
+              
+            </div>
+
+            {/* Language Selector */}
+            <div className="flex justify-center">
+              <div className="relative group">
+                <Select onValueChange={handleLanguage} value={language}>
+                  <SelectTrigger className="w-[200px] bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 shadow-lg rounded-xl transition-all duration-200 hover:shadow-xl">
+                    <SelectValue placeholder="Select a language" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 shadow-xl rounded-xl">
+                    <SelectGroup>
+                      <SelectLabel className="text-slate-600 dark:text-slate-400 font-medium">Language</SelectLabel>
+                      <SelectItem value="js" className="hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg">
+                        JavaScript
+                      </SelectItem>
+                      <SelectItem value="ts" className="hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg">
+                        TypeScript
+                      </SelectItem>
+                      <SelectItem value="go" className="hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg">
+                        Go
+                      </SelectItem>
+                      <SelectItem value="c++" className="hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg">
+                        C++
+                      </SelectItem>
+                      <SelectItem value="java" className="hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg">
+                        Java
+                      </SelectItem>
+                      <SelectItem value="python" className="hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg">
+                        Python
+                      </SelectItem>
+                      <SelectItem value="rust" className="hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg">
+                        Rust
+                      </SelectItem>
+                      <SelectItem value="html" className="hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg">
+                        HTML
+                      </SelectItem>
+                      <SelectItem value="dart" className="hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg">
+                        Dart
+                      </SelectItem>
+                      <SelectItem value="bash" className="hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg">
+                        Bash
+                      </SelectItem>
+                      <SelectItem value="powershell" className="hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg">
+                        Powershell
+                      </SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </TabsContent>
+          <TabsContent value="instructions" className="flex-1 mt-0 min-h-0">
+            {/* Title and Subtitle */}
+            <div className="text-center space-y-4 mb-12">
+              <h2 className="text-4xl font-bold bg-gradient-to-r from-slate-900 via-slate-700 to-slate-900 dark:from-white dark:via-slate-200 dark:to-white bg-clip-text text-transparent">
+                Instructions
+              </h2>
+              <p className="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+                Write instructions or notes on the code you want to share
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              
+
+              {/* Markdown Editor */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-slate-700 dark:text-slate-300">Editor</h3>
+                <div className="relative group">
+                  <div className="relative">
+                    <Textarea
+                      onChange={handleMdChange}
+                      placeholder="Enter your instructions here using Markdown syntax and watch the preview update..."
+                      className="min-h-[500px] bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 rounded-xl font-mono text-sm placeholder:text-slate-400 dark:placeholder:text-slate-500 shadow-lg transition-all duration-200"
+                      value={mdContent}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Markdown Preview */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-slate-700 dark:text-slate-300">Preview</h3>
+                <div className="relative group">
+                  <Card className="shadow-lg">
+                    <CardHeader className="pb-4">
+                      <CardTitle className="font-bold text-center text-slate-700 dark:text-slate-300">
+                        Markdown Preview
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <ScrollArea className="h-96 w-full">
+                        <div
+                          className="prose prose-sm max-w-none dark:prose-invert"
+                          dangerouslySetInnerHTML={{
+                            __html: mdContent
+                              .replace(/^### (.*$)/gim, "<h3>$1</h3>")
+                              .replace(/^## (.*$)/gim, "<h2>$1</h2>")
+                              .replace(/^# (.*$)/gim, "<h1>$1</h1>")
+                              .replace(/\*\*(.*?)\*\*/gim, "<strong>$1</strong>")
+                              .replace(/\*(.*?)\*/gim, "<em>$1</em>")
+                              .replace(/```(.*?)```/gim, "<pre><code>$1</code></pre>")
+                              .replace(/`(.*?)`/gim, "<code>$1</code>")
+                              .replace(/^> (.*$)/gim, "<blockquote>$1</blockquote>")
+                              .replace(/\n/gim, "<br>"),
+                          }}
+                        />
+                      </ScrollArea>
+                    </CardContent>
+                  </Card>
+                </div>
+              </div>
+            </div>
+          </TabsContent>
+        </Tabs>
+        
+        <div className="grid w-full max-w-sm items-center gap-3 mx-auto">
+          <Button onClick={() => handleShareCode(codeContent, mdContent)}>
+          Save your code
+          </Button>
+          <Label>Share your code with the <span className="italic">code</span> below!</Label>
+          <Input value={shareCode} disabled={true} placeholder="The code to share this project will appear here"/>
+        </div>
+        
+      </div>
+
+      <Footer />
     </div>
-  );
+  )
 }
+
+export default Home
