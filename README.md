@@ -95,4 +95,4 @@ npm run build
 npm run start
 ```
 
-In the case of a production deployment, make sure to add `NEXT_PUBLIC_URL` as an environment variable pointing to the production URL of your application.
+In the case of a production deployment, make sure to add `NEXT_PUBLIC_SITE_URL` as an environment variable pointing to the production URL of your application.
