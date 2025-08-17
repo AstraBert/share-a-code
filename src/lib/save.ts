@@ -20,3 +20,19 @@ export async function saveCode(code: string, instructions: string): Promise<stri
     return uuid
   }
 }
+
+export async function updateCode(code: string, instructions: string, codeGetter: string): Promise<string> {
+  const supabase = await createClient()
+  const data = {
+    code: code,
+    instructions: instructions,
+  }
+
+  const { error } = await supabase.from("code").update(data).eq("shareCode", codeGetter)
+
+  if (error) {
+    return "An error occurred while saving the current project"
+  } else {
+    return "The current project has been successfully saved!"
+  }
+}

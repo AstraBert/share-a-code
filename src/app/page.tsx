@@ -25,7 +25,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Footer } from "@/components/custom/footer"
-import { saveCode } from "@/lib/save"
+import { saveCode, updateCode } from "@/lib/save"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { getCode } from "@/lib/get-code"
@@ -62,6 +62,11 @@ const Home = () => {
     const data = await getCode(codeGetter)
     setCodeContent(data.code)
     setmdContent(data.instructions)
+  }
+
+  const handleCurrentCode = async (codeContent: string, instructions: string, codeGetter: string) => {
+    const cdGtr = await updateCode(codeContent, instructions, codeGetter)
+    setShareCode(cdGtr)
   }
 
   return (
@@ -124,15 +129,14 @@ const Home = () => {
         </div>
       </nav>
 
-      <div className="grid w-full max-w-sm items-center gap-3 mx-auto">
-          <Label>Put a share code in the box below!</Label>
+      <div className="max-w-7xl mx-auto px-6 py-12 space-y-12">
+        <div className="grid w-full max-w-sm items-center gap-3 mx-auto">
+          <Label className="justify-center font-semibold">✨Put a share code in the box below✨</Label>
           <Input placeholder="your-code-here" onChange={handleCodeGetter} value={shareCodeGetter}/>
-          <Button onClick={() => getSharedCode(shareCodeGetter)}>
-          View Some Shared Code
+          <Button onClick={() => getSharedCode(shareCodeGetter)} className="bg-gray-900 text-white hover:bg-white hover:text-gray-900 shadow-lg border-2">
+          View A Shared Code Project
           </Button>
         </div>
-
-      <div className="max-w-7xl mx-auto px-6 py-12 space-y-12">
         <Tabs defaultValue="editor" className="h-full flex flex-col">
           <TabsList className="grid w-full grid-cols-2 flex-shrink-0 mb-8">
             <TabsTrigger value="editor">Editor</TabsTrigger>
@@ -299,11 +303,14 @@ const Home = () => {
         </Tabs>
         
         <div className="grid w-full max-w-sm items-center gap-3 mx-auto">
-          <Button onClick={() => handleShareCode(codeContent, mdContent)}>
-          Save your code
+          <Button onClick={() => handleShareCode(codeContent, mdContent)} className="bg-gray-900 text-white hover:bg-white hover:text-gray-900 shadow-lg border-2">
+          Create a New Code Project
           </Button>
-          <Label>Share your code with the <span className="italic">code</span> below!</Label>
-          <Input value={shareCode} disabled={true} placeholder="The code to share this project will appear here"/>
+          <Button onClick={() => handleCurrentCode(codeContent, mdContent, shareCodeGetter)} className="bg-gray-900 text-white hover:bg-white hover:text-gray-900 shadow-lg border-2">
+          Save Current Code Project
+          </Button>
+          <Label className="justify-center font-semibold text-center">✨Share your code project with other people using the code below✨</Label>
+          <Input value={shareCode} readOnly={true} placeholder="The code to share this project will appear here"/>
         </div>
         
       </div>
