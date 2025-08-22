@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Switch } from "@/components/ui/switch"
 import Link from "next/link"
 import Image from "next/image"
 import {
@@ -36,6 +37,8 @@ const Home = () => {
   const [language, setLanguage] = useState("python")
   const [shareCode, setShareCode ] = useState("")
   const [shareCodeGetter, setShareCodeGetter] = useState("")
+  const [ownership, setOwnership] = useState(true)
+  const [collaboration, setCollaboration] = useState(true)
 
   const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setCodeContent(e.target.value)
@@ -53,8 +56,8 @@ const Home = () => {
     setLanguage(value)
   }
 
-  const handleShareCode = async (code: string, instructions: string) => {
-    const sharingCode = await saveCode(code, instructions)
+  const handleShareCode = async (code: string, instructions: string, ownership: boolean, collaboration: boolean) => {
+    const sharingCode = await saveCode(code, instructions, ownership, collaboration)
     setShareCode(sharingCode)
   }
 
@@ -67,6 +70,14 @@ const Home = () => {
   const handleCurrentCode = async (codeContent: string, instructions: string, codeGetter: string) => {
     const cdGtr = await updateCode(codeContent, instructions, codeGetter)
     setShareCode(cdGtr)
+  }
+
+  const handleOwnership = () => {
+    setOwnership(!ownership)
+  }
+
+  const handleCollaboration = () => {
+    setCollaboration(!collaboration)
   }
 
   return (
@@ -185,7 +196,7 @@ const Home = () => {
                 </div>
               </div>
 
-              
+
             </div>
 
             {/* Language Selector */}
@@ -249,7 +260,7 @@ const Home = () => {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              
+
 
               {/* Markdown Editor */}
               <div className="space-y-4">
@@ -301,18 +312,26 @@ const Home = () => {
             </div>
           </TabsContent>
         </Tabs>
-        
+
         <div className="grid w-full max-w-sm items-center gap-3 mx-auto">
-          <Button onClick={() => handleShareCode(codeContent, mdContent)} className="bg-gray-900 text-white hover:bg-white hover:text-gray-900 shadow-lg border-2">
+          <Button onClick={() => handleShareCode(codeContent, mdContent, ownership, collaboration)} className="bg-gray-900 text-white hover:bg-white hover:text-gray-900 shadow-lg border-2">
           Create a New Code Project
           </Button>
           <Button onClick={() => handleCurrentCode(codeContent, mdContent, shareCodeGetter)} className="bg-gray-900 text-white hover:bg-white hover:text-gray-900 shadow-lg border-2">
           Save Current Code Project
           </Button>
+          <div className="flex items-center space-x-2 justify-center">
+            <Switch onClick={handleOwnership} defaultChecked />
+            <Label>I am the owner of this code</Label>
+          </div>
+          <div className="flex items-center space-x-2 justify-center">
+            <Switch onClick={handleCollaboration} defaultChecked />
+            <Label>Allow others to collaborate</Label>
+          </div>
           <Label className="justify-center font-semibold text-center">✨Share your code project with other people using the code below✨</Label>
           <Input value={shareCode} readOnly={true} placeholder="The code to share this project will appear here"/>
         </div>
-        
+
       </div>
 
       <Footer />
