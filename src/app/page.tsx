@@ -30,12 +30,13 @@ import { saveCode, updateCode } from "@/lib/save"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { getCode } from "@/lib/get-code"
+import CodeEdit from "@/components/custom/code-edit"
 
 const Home = () => {
   const [codeContent, setCodeContent] = useState("")
   const [mdContent, setmdContent] = useState("")
   const [language, setLanguage] = useState("python")
-  const [shareCode, setShareCode ] = useState("")
+  const [shareCode, setShareCode] = useState("")
   const [shareCodeGetter, setShareCodeGetter] = useState("")
   const [ownership, setOwnership] = useState(true)
   const [collaboration, setCollaboration] = useState(true)
@@ -143,15 +144,19 @@ const Home = () => {
       <div className="max-w-7xl mx-auto px-6 py-12 space-y-12">
         <div className="grid w-full max-w-sm items-center gap-3 mx-auto">
           <Label className="justify-center font-semibold">✨Put a share code in the box below✨</Label>
-          <Input placeholder="your-code-here" onChange={handleCodeGetter} value={shareCodeGetter}/>
-          <Button onClick={() => getSharedCode(shareCodeGetter)} className="bg-gray-900 text-white hover:bg-white hover:text-gray-900 shadow-lg border-2">
-          View A Shared Code Project
+          <Input placeholder="your-code-here" onChange={handleCodeGetter} value={shareCodeGetter} />
+          <Button
+            onClick={() => getSharedCode(shareCodeGetter)}
+            className="bg-gray-900 text-white hover:bg-white hover:text-gray-900 shadow-lg border-2"
+          >
+            View A Shared Code Project
           </Button>
         </div>
         <Tabs defaultValue="editor" className="h-full flex flex-col">
-          <TabsList className="grid w-full grid-cols-2 flex-shrink-0 mb-8">
+          <TabsList className="grid w-full grid-cols-3 flex-shrink-0 mb-8">
             <TabsTrigger value="editor">Editor</TabsTrigger>
             <TabsTrigger value="instructions">Instructions</TabsTrigger>
+            <TabsTrigger value="code-edit-ai">AI Code Assistant</TabsTrigger>
           </TabsList>
           <TabsContent value="editor" className="flex-1 mt-0 min-h-0">
             {/* Title and Subtitle */}
@@ -165,7 +170,6 @@ const Home = () => {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-
               {/* Code Editor */}
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold text-slate-700 dark:text-slate-300">Editor</h3>
@@ -195,8 +199,6 @@ const Home = () => {
                   </div>
                 </div>
               </div>
-
-
             </div>
 
             {/* Language Selector */}
@@ -260,8 +262,6 @@ const Home = () => {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-
-
               {/* Markdown Editor */}
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold text-slate-700 dark:text-slate-300">Editor</h3>
@@ -311,14 +311,29 @@ const Home = () => {
               </div>
             </div>
           </TabsContent>
+          <TabsContent value="code-edit-ai" className="flex-1 mt-0 min-h-0">
+            <div className="text-center space-y-4 mb-12">
+              <h2 className="text-4xl font-bold bg-gradient-to-r from-slate-900 via-slate-700 to-slate-900 dark:from-white dark:via-slate-200 dark:to-white bg-clip-text text-transparent">
+                AI Code Assistant
+              </h2>
+              <p className="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Edit your code with AI</p>
+            </div>
+            <CodeEdit mdContent={mdContent} codeContent={codeContent} />
+          </TabsContent>
         </Tabs>
 
         <div className="grid w-full max-w-sm items-center gap-3 mx-auto">
-          <Button onClick={() => handleShareCode(codeContent, mdContent, ownership, collaboration)} className="bg-gray-900 text-white hover:bg-white hover:text-gray-900 shadow-lg border-2">
-          Create a New Code Project
+          <Button
+            onClick={() => handleShareCode(codeContent, mdContent, ownership, collaboration)}
+            className="bg-gray-900 text-white hover:bg-white hover:text-gray-900 shadow-lg border-2"
+          >
+            Create a New Code Project
           </Button>
-          <Button onClick={() => handleCurrentCode(codeContent, mdContent, shareCodeGetter)} className="bg-gray-900 text-white hover:bg-white hover:text-gray-900 shadow-lg border-2">
-          Save Current Code Project
+          <Button
+            onClick={() => handleCurrentCode(codeContent, mdContent, shareCodeGetter)}
+            className="bg-gray-900 text-white hover:bg-white hover:text-gray-900 shadow-lg border-2"
+          >
+            Save Current Code Project
           </Button>
           <div className="flex items-center space-x-2 justify-center">
             <Switch onClick={handleOwnership} defaultChecked />
@@ -328,10 +343,11 @@ const Home = () => {
             <Switch onClick={handleCollaboration} defaultChecked />
             <Label>Allow others to collaborate</Label>
           </div>
-          <Label className="justify-center font-semibold text-center">✨Share your code project with other people using the code below✨</Label>
-          <Input value={shareCode} readOnly={true} placeholder="The code to share this project will appear here"/>
+          <Label className="justify-center font-semibold text-center">
+            ✨Share your code project with other people using the code below✨
+          </Label>
+          <Input value={shareCode} readOnly={true} placeholder="The code to share this project will appear here" />
         </div>
-
       </div>
 
       <Footer />
