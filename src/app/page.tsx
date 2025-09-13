@@ -30,6 +30,7 @@ import { saveCode, updateCode } from "@/lib/save"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { getCode } from "@/lib/get-code"
+import { createPost } from "@/lib/create-posts"
 import CodeEdit from "@/components/custom/code-edit"
 
 const Home = () => {
@@ -71,6 +72,11 @@ const Home = () => {
   const handleCurrentCode = async (codeContent: string, instructions: string, codeGetter: string) => {
     const cdGtr = await updateCode(codeContent, instructions, codeGetter)
     setShareCode(cdGtr)
+  }
+
+  const handleCreatePost = async (code: string, description: string, language: string) => {
+    const msg = await createPost(code, description, language)
+    setShareCode(msg)
   }
 
   const handleOwnership = () => {
@@ -323,6 +329,12 @@ const Home = () => {
         </Tabs>
 
         <div className="grid w-full max-w-sm items-center gap-3 mx-auto">
+          <Button
+            onClick={() => handleCreatePost(codeContent, mdContent, language)}
+            className="bg-gray-900 text-white hover:bg-white hover:text-gray-900 shadow-lg border-2"
+          >
+            Publish on Share-A-Code Learn
+          </Button>
           <Button
             onClick={() => handleShareCode(codeContent, mdContent, ownership, collaboration)}
             className="bg-gray-900 text-white hover:bg-white hover:text-gray-900 shadow-lg border-2"
